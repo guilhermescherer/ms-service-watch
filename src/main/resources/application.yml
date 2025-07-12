@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: ms-service-watch
+  datasource:
+    url: jdbc:postgresql://localhost:15432/service-watch
+    username: service-watch
+    password: passw0rd
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
