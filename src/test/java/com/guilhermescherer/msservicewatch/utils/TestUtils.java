@@ -4,7 +4,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public class TestUtils {
 
-    public static PostgreSQLContainer<?> newContainer() {
+    public static PostgreSQLContainer<?> newPostgreSQLContainer() {
         return new PostgreSQLContainer<>("postgres:latest")
                 .withDatabaseName("testdb")
                 .withUsername("test")
