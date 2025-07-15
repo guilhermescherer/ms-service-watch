@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServiceEndpointDatabaseServiceImplTest {
 
     @Container
-    static PostgreSQLContainer<?> postgresContainer = TestUtils.newContainer();
+    static PostgreSQLContainer<?> postgresContainer = TestUtils.newPostgreSQLContainer();
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
