@@ -17,6 +17,7 @@ public class ServiceEndpointResponseConverter implements Converter<ServiceEndpoi
                 .withName(source.getName())
                 .withId(source.getId())
                 .withActive(source.isActive())
+                .withCheckInterval(source.getCheckInterval())
                 .withCreatedAt(source.getCreatedAt())
                 .withUpdatedAt(source.getUpdatedAt())
                 .withLastCheckTime(source.getCheckedAt())

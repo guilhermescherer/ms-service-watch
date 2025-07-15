@@ -16,6 +16,7 @@ public class ServiceEndpointResponse extends BasicResponse {
     private String name;
     private String url;
     private boolean active;
+    private int checkInterval;
     private String lastStatus;
     private LocalDateTime lastCheckTime;
 }
