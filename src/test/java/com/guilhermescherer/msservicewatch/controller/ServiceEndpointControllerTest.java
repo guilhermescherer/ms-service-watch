@@ -1,7 +1,6 @@
 package com.guilhermescherer.msservicewatch.controller;
 
 import com.guilhermescherer.msservicewatch.utils.TestUtils;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +23,9 @@ import static org.hamcrest.Matchers.nullValue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class ServiceEndpointControllerTest {
+
+    private static final String VALIDATION_ERROR = "Validation error";
+    private static final int STATUS_BAD_REQUEST = 400;
 
     @Container
     static PostgreSQLContainer<?> postgresContainer = TestUtils.newPostgreSQLContainer();
@@ -54,13 +56,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
+            postServiceEndpoint(requestBody)
                     .statusCode(201)
                     .body("id", notNullValue())
                     .body("name", equalTo("Meu Serviço"))
@@ -82,16 +78,10 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'name' }.message", equalTo("Name must not be blank"));
         }
@@ -107,16 +97,10 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'url' }.message", equalTo("URL must not be blank"));
         }
@@ -133,16 +117,10 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'url' }.message", equalTo("URL must start with http:// or https://"));
         }
@@ -150,25 +128,20 @@ public class ServiceEndpointControllerTest {
         @Test
         @DisplayName("Should return 400 when url is greater than accepted")
         void whenUrlOutOfRange_thenReturns400() {
-            String requestBody = """
+            String url = "https://meuservico.com/" + "a".repeat(2050);
+            String requestBody = String.format("""
                     {
                       "name": "Meu Serviço",
-                      "url": "https://meuservico.com/healthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahealthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                      "url": "%s",
                       "active": true,
                       "checkInterval": 5
                     }
-                    """;
+                    """, url);
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'url' }.message", equalTo("URL must be at most 2048 characters"));
         }
@@ -184,16 +157,10 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'active' }.message", equalTo("Active must not be null"));
         }
@@ -209,16 +176,10 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'checkInterval' }.message", equalTo("Check interval must not be null"));
         }
@@ -235,16 +196,10 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'checkInterval' }.message", equalTo("Check interval must be at least 1 minute"));
         }
@@ -261,18 +216,22 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            RestAssured.given()
-                    .baseUri(getBaseUri())
-                    .contentType(ContentType.JSON)
-                    .body(requestBody)
-                    .when()
-                    .post("/service-endpoint")
-                    .then()
-                    .statusCode(400)
-                    .body("title", equalTo("Validation error"))
-                    .body("status", equalTo(400))
+            postServiceEndpoint(requestBody)
+                    .statusCode(STATUS_BAD_REQUEST)
+                    .body("title", equalTo(VALIDATION_ERROR))
+                    .body("status", equalTo(STATUS_BAD_REQUEST))
                     .body("fieldErrors", not(empty()))
                     .body("fieldErrors.find { it.field == 'checkInterval' }.message", equalTo("Check interval must not exceed 180 minutes"));
+        }
+
+        private io.restassured.response.ValidatableResponse postServiceEndpoint(String jsonBody) {
+            return given()
+                    .baseUri(getBaseUri())
+                    .contentType(ContentType.JSON)
+                    .body(jsonBody)
+                    .when()
+                    .post("/service-endpoint")
+                    .then();
         }
     }
 
