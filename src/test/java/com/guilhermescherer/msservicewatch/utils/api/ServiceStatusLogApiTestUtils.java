@@ -1,7 +1,7 @@
-package com.guilhermescherer.msservicewatch.utils;
+package com.guilhermescherer.msservicewatch.utils.api;
 
-import static com.guilhermescherer.msservicewatch.utils.ApiTestUtils.ApiEndpoint.LOGS;
-import static com.guilhermescherer.msservicewatch.utils.ApiTestUtils.ApiEndpoint.SERVICE_ENDPOINT;
+import static com.guilhermescherer.msservicewatch.utils.api.ApiTestUtils.ApiEndpoint.LOGS;
+import static com.guilhermescherer.msservicewatch.utils.api.ApiTestUtils.ApiEndpoint.SERVICE_ENDPOINT;
 import static io.restassured.RestAssured.given;
 
 public class ServiceStatusLogApiTestUtils extends ApiTestUtils {
@@ -10,7 +10,8 @@ public class ServiceStatusLogApiTestUtils extends ApiTestUtils {
         super(port);
     }
 
-    public io.restassured.response.ValidatableResponse getServiceEndpointLogs(Integer serviceEndpointId) {
+    @Override
+    public io.restassured.response.ValidatableResponse get(Integer serviceEndpointId) {
         return given()
                 .baseUri(getBaseUri())
                 .when()

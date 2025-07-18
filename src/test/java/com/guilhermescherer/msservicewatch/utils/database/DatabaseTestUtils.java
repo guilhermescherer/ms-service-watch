@@ -1,4 +1,4 @@
-package com.guilhermescherer.msservicewatch.utils;
+package com.guilhermescherer.msservicewatch.utils.database;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 

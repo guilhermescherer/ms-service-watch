@@ -2,8 +2,8 @@ package com.guilhermescherer.msservicewatch.controller;
 
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
-import com.guilhermescherer.msservicewatch.utils.ServiceStatusApiTestUtils;
-import com.guilhermescherer.msservicewatch.utils.DatabaseTestUtils;
+import com.guilhermescherer.msservicewatch.utils.api.ServiceEndpointApiTestUtils;
+import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,11 +51,11 @@ public class ServiceEndpointControllerTest {
     @Autowired
     private ServiceEndpointRepository serviceEndpointRepository;
 
-    private ServiceStatusApiTestUtils apiTestUtils;
+    private ServiceEndpointApiTestUtils serviceEndpointApiTestUtils;
 
     @PostConstruct
     public void setUp() {
-        apiTestUtils = new ServiceStatusApiTestUtils(port);
+        serviceEndpointApiTestUtils = new ServiceEndpointApiTestUtils(port);
     }
 
     @AfterEach
@@ -79,7 +79,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_CREATED)
                     .body("id", notNullValue())
                     .body("name", equalTo("Meu Serviço"))
@@ -101,7 +101,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -123,7 +123,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """, name);
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -142,7 +142,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -162,7 +162,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -183,7 +183,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """, url);
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -202,7 +202,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -221,7 +221,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -241,7 +241,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -261,7 +261,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.postServiceEndpoint(requestBody)
+            serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -279,7 +279,7 @@ public class ServiceEndpointControllerTest {
         void shouldReturnServiceEndpoint() {
             Integer id = createExampleOfServiceEndpoint();
 
-            apiTestUtils.getServiceEndpoint(id)
+            serviceEndpointApiTestUtils.get(id)
                     .statusCode(HttpStatus.SC_SUCCESS)
                     .body("id", equalTo(id))
                     .body("name", equalTo("Exemplo"))
@@ -293,7 +293,7 @@ public class ServiceEndpointControllerTest {
         @Test
         @DisplayName("Should return 404 when service endpoint is not found")
         void whenServiceEndpointNotFound_thenReturns404() {
-            apiTestUtils.getServiceEndpoint(1)
+            serviceEndpointApiTestUtils.get(1)
                     .statusCode(HttpStatus.SC_NOT_FOUND)
                     .body("title", equalTo(NOT_FOUND_ENTITY_ERROR))
                     .body("status", equalTo(HttpStatus.SC_NOT_FOUND));
@@ -325,12 +325,12 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            Integer firstId = apiTestUtils.postServiceEndpoint(firstRequest)
+            Integer firstId = serviceEndpointApiTestUtils.post(firstRequest)
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract()
                     .path("id");
 
-            Integer secondId = apiTestUtils.postServiceEndpoint(secondRequest)
+            Integer secondId = serviceEndpointApiTestUtils.post(secondRequest)
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract()
                     .path("id");
@@ -378,7 +378,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, updated)
+            serviceEndpointApiTestUtils.put(id, updated)
                     .statusCode(HttpStatus.SC_OK)
                     .body("id", equalTo(id))
                     .body("name", equalTo("Serviço Atualizado"))
@@ -400,7 +400,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, body)
+            serviceEndpointApiTestUtils.put(id, body)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -423,7 +423,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """, name);
 
-            apiTestUtils.putServiceEndpoint(id, body)
+            serviceEndpointApiTestUtils.put(id, body)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -444,7 +444,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -466,7 +466,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -489,7 +489,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """, url);
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -510,7 +510,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -531,7 +531,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -554,7 +554,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -576,7 +576,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(id, requestBody)
+            serviceEndpointApiTestUtils.put(id, requestBody)
                     .statusCode(HttpStatus.SC_BAD_REQUEST)
                     .body("title", equalTo(VALIDATION_ERROR))
                     .body("status", equalTo(HttpStatus.SC_BAD_REQUEST))
@@ -596,7 +596,7 @@ public class ServiceEndpointControllerTest {
                     }
                     """;
 
-            apiTestUtils.putServiceEndpoint(99999, body)
+            serviceEndpointApiTestUtils.put(99999, body)
                     .statusCode(HttpStatus.SC_NOT_FOUND)
                     .body("status", equalTo(HttpStatus.SC_NOT_FOUND))
                     .body("title", equalTo(NOT_FOUND_ENTITY_ERROR));
@@ -609,12 +609,12 @@ public class ServiceEndpointControllerTest {
 
         @Test
         @DisplayName("Should return 200 when request is valid")
-        void shouldDeleteServiceEndpoint() {
+        void shoulddelete() {
             Integer id = createExampleOfServiceEndpoint();
 
-            apiTestUtils.deleteServiceEndpoint(id).statusCode(HttpStatus.SC_NO_CONTENT);
+            serviceEndpointApiTestUtils.delete(id).statusCode(HttpStatus.SC_NO_CONTENT);
 
-            apiTestUtils.getServiceEndpoint(id).statusCode(HttpStatus.SC_NOT_FOUND);
+            serviceEndpointApiTestUtils.get(id).statusCode(HttpStatus.SC_NOT_FOUND);
         }
 
         @Test
@@ -622,9 +622,9 @@ public class ServiceEndpointControllerTest {
         void whenServiceEndpointNotFound_thenReturns404() {
             Integer id = 9999;
 
-            apiTestUtils.deleteServiceEndpoint(id).statusCode(HttpStatus.SC_NO_CONTENT);
+            serviceEndpointApiTestUtils.delete(id).statusCode(HttpStatus.SC_NO_CONTENT);
 
-            apiTestUtils.getServiceEndpoint(id).statusCode(HttpStatus.SC_NOT_FOUND);
+            serviceEndpointApiTestUtils.get(id).statusCode(HttpStatus.SC_NOT_FOUND);
         }
     }
 
@@ -638,7 +638,7 @@ public class ServiceEndpointControllerTest {
                 }
                 """;
 
-        return apiTestUtils.postServiceEndpoint(request)
+        return serviceEndpointApiTestUtils.post(request)
                 .statusCode(HttpStatus.SC_CREATED)
                 .extract()
                 .path("id");

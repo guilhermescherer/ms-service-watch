@@ -6,9 +6,9 @@ import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.repository.ServiceStatusLogRepository;
-import com.guilhermescherer.msservicewatch.utils.DatabaseTestUtils;
-import com.guilhermescherer.msservicewatch.utils.ServiceStatusApiTestUtils;
-import com.guilhermescherer.msservicewatch.utils.ServiceStatusLogApiTestUtils;
+import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
+import com.guilhermescherer.msservicewatch.utils.api.ServiceEndpointApiTestUtils;
+import com.guilhermescherer.msservicewatch.utils.api.ServiceStatusLogApiTestUtils;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,12 +55,12 @@ public class ServiceStatusLogControllerTest {
     private ServiceEndpointRepository serviceEndpointRepository;
 
     private ServiceStatusLogApiTestUtils serviceStatusLogApiTestUtils;
-    private ServiceStatusApiTestUtils serviceStatusApiTestUtils;
+    private ServiceEndpointApiTestUtils serviceEndpointApiTestUtils;
 
     @PostConstruct
     public void setUp() {
         serviceStatusLogApiTestUtils = new ServiceStatusLogApiTestUtils(port);
-        serviceStatusApiTestUtils = new ServiceStatusApiTestUtils(port);
+        serviceEndpointApiTestUtils = new ServiceEndpointApiTestUtils(port);
     }
 
     @AfterEach
@@ -85,12 +85,12 @@ public class ServiceStatusLogControllerTest {
                     }
                     """;
 
-            Integer id = serviceStatusApiTestUtils.postServiceEndpoint(requestBody)
+            Integer id = serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract()
                     .path("id");
 
-            serviceStatusLogApiTestUtils.getServiceEndpointLogs(id)
+            serviceStatusLogApiTestUtils.get(id)
                     .statusCode(HttpStatus.SC_SUCCESS)
                     .body("content", empty())
                     .body("totalElements", equalTo(0))
@@ -109,14 +109,14 @@ public class ServiceStatusLogControllerTest {
                     }
                     """;
 
-            Integer id = serviceStatusApiTestUtils.postServiceEndpoint(requestBody)
+            Integer id = serviceEndpointApiTestUtils.post(requestBody)
                     .statusCode(HttpStatus.SC_CREATED)
                     .extract()
                     .path("id");
 
             ServiceStatusLog serviceStatusLog = createExempleOfServiceStatusLog((long) id);
 
-            serviceStatusLogApiTestUtils.getServiceEndpointLogs(id)
+            serviceStatusLogApiTestUtils.get(id)
                     .statusCode(HttpStatus.SC_SUCCESS)
                     .body("totalElements", equalTo(1))
                     .body("empty", equalTo(false))
@@ -128,7 +128,7 @@ public class ServiceStatusLogControllerTest {
         @Test
         @DisplayName("Should return 404 when service endpoint is not found")
         void whenServiceEndpointNotFound_thenReturns404() {
-            serviceStatusLogApiTestUtils.getServiceEndpointLogs(1)
+            serviceStatusLogApiTestUtils.get(1)
                     .statusCode(HttpStatus.SC_NOT_FOUND)
                     .body("title", equalTo(NOT_FOUND_ENTITY_ERROR))
                     .body("status", equalTo(HttpStatus.SC_NOT_FOUND));

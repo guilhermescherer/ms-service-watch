@@ -3,7 +3,7 @@ package com.guilhermescherer.msservicewatch.service.database.impl;
 import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
-import com.guilhermescherer.msservicewatch.utils.DatabaseTestUtils;
+import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

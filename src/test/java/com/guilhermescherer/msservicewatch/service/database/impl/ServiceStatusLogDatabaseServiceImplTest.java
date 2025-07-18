@@ -5,7 +5,7 @@ import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.repository.ServiceStatusLogRepository;
-import com.guilhermescherer.msservicewatch.utils.DatabaseTestUtils;
+import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
