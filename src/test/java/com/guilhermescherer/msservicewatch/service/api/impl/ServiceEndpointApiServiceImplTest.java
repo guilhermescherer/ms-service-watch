@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ServiceEndpointApiServiceImplTest {
@@ -67,5 +68,27 @@ class ServiceEndpointApiServiceImplTest {
         assertNotNull(responseData);
         assertEquals(HttpStatus.NOT_FOUND, responseData.getHttpStatusCode());
         assertTrue(responseData.getResponseTimeMillis() >= 0);
+    }
+
+    @Test
+    @DisplayName("Call endpoint returns unexpected exception")
+    void callEndpointReturnsUnexpectedException() throws IOException {
+        MockWebServer isolatedServer = new MockWebServer();
+        isolatedServer.start();
+        isolatedServer.shutdown();
+
+        WebClient isolatedWebClient = WebClient.builder()
+                .baseUrl(isolatedServer.url("/").toString())
+                .build();
+
+        ServiceEndpointApiServiceImpl isolatedService = new ServiceEndpointApiServiceImpl(isolatedWebClient);
+        ServiceEndpoint isolatedServiceEndpoint = new ServiceEndpoint();
+        isolatedServiceEndpoint.setUrl(isolatedServer.url("/test").toString());
+
+        ResponseData response = isolatedService.callEndpoint(isolatedServiceEndpoint);
+
+        assertNotNull(response);
+        assertNull(response.getHttpStatusCode());
+        assertNull(response.getResponseTimeMillis());
     }
 }

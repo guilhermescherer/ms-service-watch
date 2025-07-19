@@ -5,9 +5,9 @@ import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
 import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.service.api.ServiceEndpointApiService;
-import com.guilhermescherer.msservicewatch.service.database.ServiceStatusLogDatabaseService;
 import com.guilhermescherer.msservicewatch.service.core.CheckServiceEndpointService;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
+import com.guilhermescherer.msservicewatch.service.database.ServiceStatusLogDatabaseService;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -78,11 +78,7 @@ public class CheckServiceEndpointServiceImpl implements CheckServiceEndpointServ
                         .orElse(false)
         ),
 
-        UNKNOWN(Status.UNKNOWN, response ->
-                Optional.ofNullable(response)
-                        .map(ResponseData::getHttpStatusCode)
-                        .isEmpty()
-        );
+        UNKNOWN(Status.UNKNOWN, response -> false);
 
         @Getter
         private final Status status;
@@ -103,6 +99,7 @@ public class CheckServiceEndpointServiceImpl implements CheckServiceEndpointServ
                     return value.getStatus();
                 }
             }
+
             return UNKNOWN.getStatus();
         }
     }
