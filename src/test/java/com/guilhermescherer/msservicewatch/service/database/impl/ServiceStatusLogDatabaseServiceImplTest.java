@@ -5,7 +5,7 @@ import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.repository.ServiceStatusLogRepository;
-import com.guilhermescherer.msservicewatch.utils.TestUtils;
+import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @Testcontainers
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ServiceStatusLogDatabaseServiceImplTest {
 
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = TestUtils.newPostgreSQLContainer();
+    public static PostgreSQLContainer<?> postgreSQLContainer = DatabaseTestUtils.newPostgreSQLContainer();
 
     @DynamicPropertySource
     static void registerPgProperties(DynamicPropertyRegistry registry) {

@@ -3,7 +3,7 @@ package com.guilhermescherer.msservicewatch.service.database.impl;
 import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
-import com.guilhermescherer.msservicewatch.utils.TestUtils;
+import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @Testcontainers
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ServiceEndpointDatabaseServiceImplTest {
 
     @Container
-    static PostgreSQLContainer<?> postgresContainer = TestUtils.newPostgreSQLContainer();
+    static PostgreSQLContainer<?> postgresContainer = DatabaseTestUtils.newPostgreSQLContainer();
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {

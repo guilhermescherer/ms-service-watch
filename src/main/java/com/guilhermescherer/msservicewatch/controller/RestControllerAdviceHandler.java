@@ -22,8 +22,7 @@ public class RestControllerAdviceHandler {
         HttpStatus status = ex.getStatus();
 
         ProblemDetail problem = ProblemDetail.forStatus(status);
-        problem.setTitle(status.getReasonPhrase());
-        problem.setDetail(ex.getMessage());
+        problem.setTitle(ex.getMessage());
         problem.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
         problem.setType(URI.create(ex.getError().getUrl()));
 
@@ -53,7 +52,7 @@ public class RestControllerAdviceHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleException(Exception ex, WebRequest request) {
+    public ResponseEntity<ProblemDetail> handleException(WebRequest request) {
         ProblemDetail problem = ProblemDetail.forStatus(ErrorCatalog.GENERAL_ERROR.getStatus());
         problem.setTitle(ErrorCatalog.GENERAL_ERROR.getMessage());
         problem.setType(URI.create(ErrorCatalog.GENERAL_ERROR.getUrl()));
