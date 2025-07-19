@@ -14,7 +14,7 @@ public class ServiceEndpointSchedulerImpl implements Scheduler {
 
     private final ServiceEndpointFacade serviceEndpointFacade;
 
-    @Scheduled(fixedDelay = 2_000)
+    @Scheduled(fixedDelayString = "${scheduler.delay}")
     @Override
     public void perform() {
         log.info("Performing scheduled service endpoints");
