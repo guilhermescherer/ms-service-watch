@@ -44,6 +44,5 @@ jobs:
             -Dsonar.projectKey=guilhermescherer_ms-service-watch \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Jacoco files
-        run: |
-          ls -la ms-service-watch/target/site/jacoco
+      - name: Find jacoco.xml
+        run: find . -name jacoco.xml
