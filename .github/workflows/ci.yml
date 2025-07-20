@@ -41,7 +41,8 @@ jobs:
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+        run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.projectKey=guilhermescherer_ms-service-watch \
           -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
 
