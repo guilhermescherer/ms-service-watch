@@ -21,20 +21,5 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       - name: Build and Test with Maven
         run: mvn clean verify
-
-      - name: Run SonarCloud Analysis
-        run: mvn sonar:sonar \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-          -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} \
-          -Dsonar.organization=${{ vars.SONAR_ORGANIZATION_KEY }}
-

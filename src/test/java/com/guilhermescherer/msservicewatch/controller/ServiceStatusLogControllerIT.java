@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.equalTo;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class ServiceStatusLogControllerTest {
+public class ServiceStatusLogControllerIT {
 
     private static final String NOT_FOUND_ENTITY_ERROR = "Not found entity";
 
