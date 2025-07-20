@@ -50,7 +50,7 @@ public class ServiceEndpointController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         serviceEndpointFacade.delete(id);
         return ResponseEntity.noContent().build();
     }

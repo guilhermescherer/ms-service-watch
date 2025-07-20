@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ServiceStatusLogDatabaseServiceImplIT {
+class ServiceStatusLogDatabaseServiceImplIT {
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = DatabaseTestUtils.newPostgreSQLContainer();

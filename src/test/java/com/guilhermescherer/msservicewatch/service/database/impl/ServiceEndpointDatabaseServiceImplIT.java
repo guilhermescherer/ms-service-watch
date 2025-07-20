@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ServiceEndpointDatabaseServiceImplIT {
+class ServiceEndpointDatabaseServiceImplIT {
 
     @Container
     static PostgreSQLContainer<?> postgresContainer = DatabaseTestUtils.newPostgreSQLContainer();

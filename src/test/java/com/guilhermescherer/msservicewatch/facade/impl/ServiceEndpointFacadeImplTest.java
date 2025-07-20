@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-public class ServiceEndpointFacadeImplTest {
+class ServiceEndpointFacadeImplTest {
 
     @Mock
     private ServiceEndpointDatabaseService dbService;

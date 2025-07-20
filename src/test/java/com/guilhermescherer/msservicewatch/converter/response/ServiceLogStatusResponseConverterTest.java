@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ServiceLogStatusResponseConverterTest {
+class ServiceLogStatusResponseConverterTest {
 
     @InjectMocks
     private ServiceLogStatusResponseConverter converter;

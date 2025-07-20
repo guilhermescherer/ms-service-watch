@@ -20,7 +20,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-public class ServiceStatusLogFacadeImplTest {
+class ServiceStatusLogFacadeImplTest {
 
     @Mock
     private ServiceEndpointDatabaseService serviceEndpointDatabaseService;
