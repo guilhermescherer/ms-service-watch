@@ -26,8 +26,8 @@ public class ServiceEndpointConverterTest {
     @DisplayName("Should convert ServiceEndpointRequest to ServiceEndpoint with correct fields")
     void shouldConvertRequestToEntity() {
         ServiceEndpointRequest request = new ServiceEndpointRequest();
-        request.setName("My Service");
-        request.setUrl("https://myservice.co");
+        request.setName("My Servic");
+        request.setUrl("https://myservice.com");
         request.setActive(true);
         request.setCheckInterval(15);
 
