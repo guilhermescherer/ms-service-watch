@@ -38,9 +38,6 @@ jobs:
       - name: Build and Test
         run: mvn -B clean verify
 
-      - name: Find jacoco
-        run: find . -name jacoco.xml
-
       - name: Sonar Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
