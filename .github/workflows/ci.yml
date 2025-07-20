@@ -7,8 +7,8 @@ on:
       - release
 
 jobs:
-  build-and-analyze:
-    name: Build, Test, Analyze
+  build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
