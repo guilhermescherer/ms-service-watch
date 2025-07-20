@@ -35,14 +35,16 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build, Test and Sonar Analysis
+      - name: Build and Test
+        run: mvn -B clean verify
+
+      - name: Find
+        run: ls
+
+      - name: Sonar Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn -B clean verify \
-            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=guilhermescherer_ms-service-watch \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
-      - name: Find jacoco.xml
-        run: find . -name jacoco.xml
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=guilhermescherer_ms-service-watch \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.coverage.jacoco.xmlReportPaths=ms-service-watch/target/site/jacoco/jacoco.xml
