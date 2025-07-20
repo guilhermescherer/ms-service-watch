@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.nullValue;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-class ServiceEndpointControllerIT {
+public class ServiceEndpointControllerIT {
 
     private static final String VALIDATION_ERROR = "Validation error";
     private static final String NOT_FOUND_ENTITY_ERROR = "Not found entity";
