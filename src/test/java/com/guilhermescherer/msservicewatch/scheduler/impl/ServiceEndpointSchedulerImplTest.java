@@ -40,5 +40,7 @@ class ServiceEndpointSchedulerImplTest {
         when(logger.isInfoEnabled()).thenReturn(true);
 
         serviceEndpointScheduler.perform();
+
+        verify(serviceEndpointFacade).verifyServiceEndpoints();
     }
 }

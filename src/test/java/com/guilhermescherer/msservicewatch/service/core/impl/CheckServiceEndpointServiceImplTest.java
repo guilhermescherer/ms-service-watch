@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CheckServiceEndpointServiceImplTest {
+class CheckServiceEndpointServiceImplTest {
 
     @Mock
     private ServiceEndpointApiService serviceEndpointApiService;
