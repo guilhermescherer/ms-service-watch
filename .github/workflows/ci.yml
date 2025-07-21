@@ -35,11 +35,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build, Test and Sonar Analysis
+      - name: Build and Test
+        run: mvn -B clean verify
+
+      - name: Sonar Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B clean verify \
-            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          mvn -B sonar:sonar \
             -Dsonar.projectKey=guilhermescherer_ms-service-watch \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
