@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.converter.request;
 
 import com.guilhermescherer.msservicewatch.dto.request.ServiceEndpointRequest;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class ServiceEndpointConverterTest {
         request.setActive(true);
         request.setCheckInterval(15);
 
-        ServiceEndpoint result = converter.convert(request);
+        ServiceEndpointModel result = converter.convert(request);
 
         assertNotNull(result);
         assertEquals("My Service", result.getName());

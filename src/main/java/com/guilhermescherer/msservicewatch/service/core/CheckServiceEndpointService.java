@@ -1,8 +1,8 @@
 package com.guilhermescherer.msservicewatch.service.core;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 
 public interface CheckServiceEndpointService {
 
-    void check(ServiceEndpoint serviceEndpoint);
+    void check(ServiceEndpointModel serviceEndpoint);
 }

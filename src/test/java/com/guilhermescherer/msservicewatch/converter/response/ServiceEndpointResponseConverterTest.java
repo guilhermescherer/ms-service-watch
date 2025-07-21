@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.converter.response;
 
 import com.guilhermescherer.msservicewatch.dto.response.ServiceEndpointResponse;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import com.guilhermescherer.msservicewatch.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ class ServiceEndpointResponseConverterTest {
     @Test
     @DisplayName("Should convert ServiceEndpoint to ServiceEndpointResponse correctly")
     void shouldConvertEntityToResponse() {
-        ServiceEndpoint source = new ServiceEndpoint();
+        ServiceEndpointModel source = new ServiceEndpointModel();
         source.setName("My Service");
         source.setUrl("https://myservice.com");
         source.setActive(true);

@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.service.api.impl;
 
 import com.guilhermescherer.msservicewatch.data.ResponseData;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import com.guilhermescherer.msservicewatch.service.api.ServiceEndpointApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class ServiceEndpointApiServiceImpl implements ServiceEndpointApiService 
     private final WebClient webClient;
 
     @Override
-    public ResponseData callEndpoint(ServiceEndpoint serviceEndpoint) {
+    public ResponseData callEndpoint(ServiceEndpointModel serviceEndpoint) {
         Instant start = Instant.now();
 
         try {

@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.converter.request;
 
 import com.guilhermescherer.msservicewatch.dto.request.ServiceEndpointRequest;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,13 +31,13 @@ class ServiceEndpointUpdateConverterTest {
         source.setActive(false);
         source.setCheckInterval(30);
 
-        ServiceEndpoint target = new ServiceEndpoint();
+        ServiceEndpointModel target = new ServiceEndpointModel();
         target.setName("Old Service");
         target.setUrl("https://oldservice.com");
         target.setActive(true);
         target.setCheckInterval(10);
 
-        ServiceEndpoint result = converter.convert(source, target);
+        ServiceEndpointModel result = converter.convert(source, target);
 
         assertSame(target, result, "Returned object should be the same target instance");
         assertEquals("Updated Service", target.getName());

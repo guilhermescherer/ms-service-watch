@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.service.database.impl;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.repository.ServiceStatusLogRepository;
 import com.guilhermescherer.msservicewatch.service.database.ServiceStatusLogDatabaseService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ public class ServiceStatusLogDatabaseServiceImpl implements ServiceStatusLogData
     private final ServiceStatusLogRepository serviceStatusLogRepository;
 
     @Override
-    public void save(ServiceStatusLog serviceStatusLog) {
+    public void save(ServiceStatusLogModel serviceStatusLog) {
         serviceStatusLogRepository.save(serviceStatusLog);
     }
 
     @Override
-    public Page<ServiceStatusLog> getLogsByServiceEndpoint(ServiceEndpoint serviceEndpoint, Pageable pageable) {
+    public Page<ServiceStatusLogModel> getLogsByServiceEndpoint(ServiceEndpointModel serviceEndpoint, Pageable pageable) {
         return serviceStatusLogRepository.findAllByService(serviceEndpoint, pageable);
     }
 }

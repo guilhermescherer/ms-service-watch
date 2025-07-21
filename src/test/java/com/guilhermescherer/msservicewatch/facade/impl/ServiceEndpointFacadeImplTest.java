@@ -6,7 +6,7 @@ import com.guilhermescherer.msservicewatch.converter.response.ServiceEndpointRes
 import com.guilhermescherer.msservicewatch.dto.request.ServiceEndpointRequest;
 import com.guilhermescherer.msservicewatch.dto.response.ServiceEndpointResponse;
 import com.guilhermescherer.msservicewatch.exception.NotFoundException;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import com.guilhermescherer.msservicewatch.service.core.CheckServiceEndpointService;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,8 +53,8 @@ class ServiceEndpointFacadeImplTest {
     @DisplayName("Should create and return response when saving new service endpoint")
     void shouldCreateAndReturnResponse() {
         ServiceEndpointRequest request = mock(ServiceEndpointRequest.class);
-        ServiceEndpoint endpoint = mock(ServiceEndpoint.class);
-        ServiceEndpoint savedEndpoint = mock(ServiceEndpoint.class);
+        ServiceEndpointModel endpoint = mock(ServiceEndpointModel.class);
+        ServiceEndpointModel savedEndpoint = mock(ServiceEndpointModel.class);
         ServiceEndpointResponse response = mock(ServiceEndpointResponse.class);
 
         when(converter.convert(request)).thenReturn(endpoint);
@@ -72,7 +72,7 @@ class ServiceEndpointFacadeImplTest {
     @Test
     @DisplayName("Should return converted response when endpoint exists")
     void shouldReturnConvertedResponseWhenEndpointExists() {
-        ServiceEndpoint endpoint = mock(ServiceEndpoint.class);
+        ServiceEndpointModel endpoint = mock(ServiceEndpointModel.class);
         ServiceEndpointResponse response = mock(ServiceEndpointResponse.class);
 
         when(dbService.getById(1L)).thenReturn(Optional.of(endpoint));
@@ -97,8 +97,8 @@ class ServiceEndpointFacadeImplTest {
     @Test
     @DisplayName("Should return list of converted responses")
     void shouldReturnListOfConvertedResponses() {
-        ServiceEndpoint endpoint1 = mock(ServiceEndpoint.class);
-        ServiceEndpoint endpoint2 = mock(ServiceEndpoint.class);
+        ServiceEndpointModel endpoint1 = mock(ServiceEndpointModel.class);
+        ServiceEndpointModel endpoint2 = mock(ServiceEndpointModel.class);
         ServiceEndpointResponse response1 = mock(ServiceEndpointResponse.class);
         ServiceEndpointResponse response2 = mock(ServiceEndpointResponse.class);
 
@@ -128,9 +128,9 @@ class ServiceEndpointFacadeImplTest {
     @DisplayName("Should update and return converted response")
     void shouldUpdateAndReturnResponse() {
         ServiceEndpointRequest request = mock(ServiceEndpointRequest.class);
-        ServiceEndpoint existing = mock(ServiceEndpoint.class);
-        ServiceEndpoint updated = mock(ServiceEndpoint.class);
-        ServiceEndpoint saved = mock(ServiceEndpoint.class);
+        ServiceEndpointModel existing = mock(ServiceEndpointModel.class);
+        ServiceEndpointModel updated = mock(ServiceEndpointModel.class);
+        ServiceEndpointModel saved = mock(ServiceEndpointModel.class);
         ServiceEndpointResponse response = mock(ServiceEndpointResponse.class);
 
         when(dbService.getById(3L)).thenReturn(Optional.of(existing));
@@ -162,8 +162,8 @@ class ServiceEndpointFacadeImplTest {
     @Test
     @DisplayName("Should call check on each endpoint returned by DB")
     void shouldCallCheckForEachEndpoint() {
-        ServiceEndpoint endpoint1 = mock(ServiceEndpoint.class);
-        ServiceEndpoint endpoint2 = mock(ServiceEndpoint.class);
+        ServiceEndpointModel endpoint1 = mock(ServiceEndpointModel.class);
+        ServiceEndpointModel endpoint2 = mock(ServiceEndpointModel.class);
 
         when(dbService.getNextEndpointsToCheck()).thenReturn(Arrays.asList(endpoint1, endpoint2));
 
