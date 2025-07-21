@@ -1,8 +1,8 @@
 package com.guilhermescherer.msservicewatch.service.core.impl;
 
 import com.guilhermescherer.msservicewatch.data.ResponseData;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.service.api.ServiceEndpointApiService;
 import com.guilhermescherer.msservicewatch.service.core.CheckServiceEndpointService;
@@ -30,7 +30,7 @@ public class CheckServiceEndpointServiceImpl implements CheckServiceEndpointServ
 
     @Transactional
     @Override
-    public void check(ServiceEndpoint serviceEndpoint) {
+    public void check(ServiceEndpointModel serviceEndpoint) {
         log.info("To check {}", serviceEndpoint.getUrl());
 
         ResponseData response = serviceEndpointApiService.callEndpoint(serviceEndpoint);
@@ -44,8 +44,8 @@ public class CheckServiceEndpointServiceImpl implements CheckServiceEndpointServ
         log.info("Endpoint {} checked", serviceEndpoint.getUrl());
     }
 
-    private void updateServiceStatusLog(ServiceEndpoint serviceEndpoint, LocalDateTime now, Status status, ResponseData response) {
-        ServiceStatusLog serviceStatusLog = new ServiceStatusLog();
+    private void updateServiceStatusLog(ServiceEndpointModel serviceEndpoint, LocalDateTime now, Status status, ResponseData response) {
+        ServiceStatusLogModel serviceStatusLog = new ServiceStatusLogModel();
 
         serviceStatusLog.setCheckedAt(now);
         serviceStatusLog.setService(serviceEndpoint);
@@ -55,7 +55,7 @@ public class CheckServiceEndpointServiceImpl implements CheckServiceEndpointServ
         serviceStatusLogDatabaseService.save(serviceStatusLog);
     }
 
-    private void updateServiceEndpoint(ServiceEndpoint serviceEndpoint, LocalDateTime now, Status status) {
+    private void updateServiceEndpoint(ServiceEndpointModel serviceEndpoint, LocalDateTime now, Status status) {
         serviceEndpoint.setCheckedAt(now);
         serviceEndpoint.setLastStatus(status);
 

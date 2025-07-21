@@ -1,6 +1,6 @@
 package com.guilhermescherer.msservicewatch.service.database.impl;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
 import com.guilhermescherer.msservicewatch.utils.database.DatabaseTestUtils;
@@ -43,13 +43,13 @@ class ServiceEndpointDatabaseServiceImplTest {
     @Autowired
     private ServiceEndpointDatabaseService service;
 
-    private ServiceEndpoint endpoint;
+    private ServiceEndpointModel endpoint;
 
     @BeforeEach
     void setUp() {
         repository.deleteAll();
 
-        endpoint = new ServiceEndpoint();
+        endpoint = new ServiceEndpointModel();
         endpoint.setName("My API");
         endpoint.setUrl("https://api.test.com");
         endpoint.setActive(true);
@@ -59,9 +59,9 @@ class ServiceEndpointDatabaseServiceImplTest {
     @Test
     @DisplayName("Should save and retrieve service endpoint")
     void shouldSaveAndRetrieveServiceEndpoint() {
-        ServiceEndpoint saved = service.save(endpoint);
+        ServiceEndpointModel saved = service.save(endpoint);
 
-        Optional<ServiceEndpoint> found = service.getById(saved.getId());
+        Optional<ServiceEndpointModel> found = service.getById(saved.getId());
 
         assertTrue(found.isPresent());
         assertEquals("My API", found.get().getName());
@@ -73,14 +73,14 @@ class ServiceEndpointDatabaseServiceImplTest {
     void shouldReturnAllEndpoints() {
         service.save(endpoint);
 
-        ServiceEndpoint serviceEndpoint = new ServiceEndpoint();
+        ServiceEndpointModel serviceEndpoint = new ServiceEndpointModel();
         serviceEndpoint.setName("Other API");
         serviceEndpoint.setUrl("http://example.com");
         serviceEndpoint.setActive(true);
         serviceEndpoint.setCheckInterval(30);
         service.save(serviceEndpoint);
 
-        List<ServiceEndpoint> all = service.getAll();
+        List<ServiceEndpointModel> all = service.getAll();
 
         assertEquals(2, all.size());
     }
@@ -88,7 +88,7 @@ class ServiceEndpointDatabaseServiceImplTest {
     @Test
     @DisplayName("Should delete endpoint by id")
     void shouldDeleteById() {
-        ServiceEndpoint saved = service.save(endpoint);
+        ServiceEndpointModel saved = service.save(endpoint);
 
         service.delete(saved.getId());
 

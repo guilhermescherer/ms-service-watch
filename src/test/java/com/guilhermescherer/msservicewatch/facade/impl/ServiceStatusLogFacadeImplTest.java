@@ -3,8 +3,8 @@ package com.guilhermescherer.msservicewatch.facade.impl;
 import com.guilhermescherer.msservicewatch.converter.response.ServiceLogStatusResponseConverter;
 import com.guilhermescherer.msservicewatch.dto.response.ServiceStatusLogResponse;
 import com.guilhermescherer.msservicewatch.exception.NotFoundException;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
 import com.guilhermescherer.msservicewatch.service.database.ServiceStatusLogDatabaseService;
 import org.junit.jupiter.api.Assertions;
@@ -29,13 +29,13 @@ class ServiceStatusLogFacadeImplTest {
     @Mock
     private ServiceLogStatusResponseConverter serviceLogStatusResponseConverter;
     @Mock
-    private ServiceEndpoint serviceEndpoint;
+    private ServiceEndpointModel serviceEndpoint;
     @Mock
     private Pageable pageable;
     @Mock
     private Page<ServiceStatusLogResponse> pageResponse;
     @Mock
-    private Page<ServiceStatusLog> serviceStatusLogs;
+    private Page<ServiceStatusLogModel> serviceStatusLogs;
     @InjectMocks
     private ServiceStatusLogFacadeImpl facade;
 
@@ -52,7 +52,7 @@ class ServiceStatusLogFacadeImplTest {
                 .thenReturn(Optional.of(serviceEndpoint));
         Mockito.when(serviceStatusLogDatabaseService.getLogsByServiceEndpoint(serviceEndpoint, pageable))
                 .thenReturn(serviceStatusLogs);
-        Mockito.when(serviceStatusLogs.map(Mockito.<java.util.function.Function<ServiceStatusLog, ServiceStatusLogResponse>>any()))
+        Mockito.when(serviceStatusLogs.map(Mockito.<java.util.function.Function<ServiceStatusLogModel, ServiceStatusLogResponse>>any()))
                 .thenReturn(pageResponse);
 
         Page<ServiceStatusLogResponse> result = facade.getLogsByServiceEndpointId(serviceEndpointId, pageable);

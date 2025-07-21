@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.service.api.impl;
 
 import com.guilhermescherer.msservicewatch.data.ResponseData;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
@@ -23,7 +23,7 @@ class ServiceEndpointApiServiceImplTest {
 
     private static MockWebServer mockWebServer;
     private ServiceEndpointApiServiceImpl service;
-    private ServiceEndpoint serviceEndpoint;
+    private ServiceEndpointModel serviceEndpoint;
 
     @BeforeAll
     static void startServer() throws IOException {
@@ -42,7 +42,7 @@ class ServiceEndpointApiServiceImplTest {
                 .baseUrl(mockWebServer.url("/").toString())
                 .build();
         service = new ServiceEndpointApiServiceImpl(webClient);
-        serviceEndpoint = new ServiceEndpoint();
+        serviceEndpoint = new ServiceEndpointModel();
         serviceEndpoint.setUrl(mockWebServer.url("/test").toString());
     }
 
@@ -82,7 +82,7 @@ class ServiceEndpointApiServiceImplTest {
                 .build();
 
         ServiceEndpointApiServiceImpl isolatedService = new ServiceEndpointApiServiceImpl(isolatedWebClient);
-        ServiceEndpoint isolatedServiceEndpoint = new ServiceEndpoint();
+        ServiceEndpointModel isolatedServiceEndpoint = new ServiceEndpointModel();
         isolatedServiceEndpoint.setUrl(isolatedServer.url("/test").toString());
 
         ResponseData response = isolatedService.callEndpoint(isolatedServiceEndpoint);

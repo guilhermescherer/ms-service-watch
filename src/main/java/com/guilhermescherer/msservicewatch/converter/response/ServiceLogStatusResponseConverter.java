@@ -1,15 +1,15 @@
 package com.guilhermescherer.msservicewatch.converter.response;
 
 import com.guilhermescherer.msservicewatch.dto.response.ServiceStatusLogResponse;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceLogStatusResponseConverter implements Converter<ServiceStatusLog, ServiceStatusLogResponse> {
+public class ServiceLogStatusResponseConverter implements Converter<ServiceStatusLogModel, ServiceStatusLogResponse> {
 
     @Override
-    public ServiceStatusLogResponse convert(ServiceStatusLog source) {
+    public ServiceStatusLogResponse convert(ServiceStatusLogModel source) {
         return ServiceStatusLogResponse.builder()
                 .withStatus(source.getStatus().toString())
                 .withResponseTimeMillis(source.getResponseTimeMillis())

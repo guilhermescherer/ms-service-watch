@@ -1,8 +1,8 @@
 package com.guilhermescherer.msservicewatch.service.core.impl;
 
 import com.guilhermescherer.msservicewatch.data.ResponseData;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.service.api.ServiceEndpointApiService;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
@@ -38,17 +38,17 @@ class CheckServiceEndpointServiceImplTest {
     private CheckServiceEndpointServiceImpl checkServiceEndpointService;
 
     @Captor
-    private ArgumentCaptor<ServiceStatusLog> statusLogCaptor;
+    private ArgumentCaptor<ServiceStatusLogModel> statusLogCaptor;
 
     @Captor
-    private ArgumentCaptor<ServiceEndpoint> endpointCaptor;
+    private ArgumentCaptor<ServiceEndpointModel> endpointCaptor;
 
-    private ServiceEndpoint serviceEndpoint;
+    private ServiceEndpointModel serviceEndpoint;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        serviceEndpoint = new ServiceEndpoint();
+        serviceEndpoint = new ServiceEndpointModel();
         serviceEndpoint.setUrl("http://example.com");
     }
 
@@ -67,11 +67,11 @@ class CheckServiceEndpointServiceImplTest {
         verify(serviceEndpointDatabaseService).save(endpointCaptor.capture());
         verify(serviceStatusLogDatabaseService).save(statusLogCaptor.capture());
 
-        ServiceEndpoint updatedEndpoint = endpointCaptor.getValue();
+        ServiceEndpointModel updatedEndpoint = endpointCaptor.getValue();
         assertEquals(Status.UP, updatedEndpoint.getLastStatus());
         assertNotNull(updatedEndpoint.getCheckedAt());
 
-        ServiceStatusLog statusLog = statusLogCaptor.getValue();
+        ServiceStatusLogModel statusLog = statusLogCaptor.getValue();
         assertEquals(Status.UP, statusLog.getStatus());
         assertEquals(100L, statusLog.getResponseTimeMillis());
         assertNotNull(statusLog.getCheckedAt());
@@ -92,11 +92,11 @@ class CheckServiceEndpointServiceImplTest {
         verify(serviceEndpointDatabaseService).save(endpointCaptor.capture());
         verify(serviceStatusLogDatabaseService).save(statusLogCaptor.capture());
 
-        ServiceEndpoint updatedEndpoint = endpointCaptor.getValue();
+        ServiceEndpointModel updatedEndpoint = endpointCaptor.getValue();
         assertEquals(Status.DOWN, updatedEndpoint.getLastStatus());
         assertNotNull(updatedEndpoint.getCheckedAt());
 
-        ServiceStatusLog statusLog = statusLogCaptor.getValue();
+        ServiceStatusLogModel statusLog = statusLogCaptor.getValue();
         assertEquals(Status.DOWN, statusLog.getStatus());
         assertEquals(200L, statusLog.getResponseTimeMillis());
         assertNotNull(statusLog.getCheckedAt());
@@ -114,11 +114,11 @@ class CheckServiceEndpointServiceImplTest {
         verify(serviceEndpointDatabaseService).save(endpointCaptor.capture());
         verify(serviceStatusLogDatabaseService).save(statusLogCaptor.capture());
 
-        ServiceEndpoint updatedEndpoint = endpointCaptor.getValue();
+        ServiceEndpointModel updatedEndpoint = endpointCaptor.getValue();
         assertEquals(Status.UNKNOWN, updatedEndpoint.getLastStatus());
         assertNotNull(updatedEndpoint.getCheckedAt());
 
-        ServiceStatusLog statusLog = statusLogCaptor.getValue();
+        ServiceStatusLogModel statusLog = statusLogCaptor.getValue();
         assertEquals(Status.UNKNOWN, statusLog.getStatus());
         assertNull(statusLog.getResponseTimeMillis());
         assertNotNull(statusLog.getCheckedAt());

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Table(name = "service_status_log")
 @Entity
-public class ServiceStatusLog extends Model {
+public class ServiceStatusLogModel extends Model {
 
     @Column(name = "checked_at", nullable = false)
     private LocalDateTime checkedAt;
@@ -27,5 +27,5 @@ public class ServiceStatusLog extends Model {
     private Long responseTimeMillis;
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
-    private ServiceEndpoint service;
+    private ServiceEndpointModel service;
 }

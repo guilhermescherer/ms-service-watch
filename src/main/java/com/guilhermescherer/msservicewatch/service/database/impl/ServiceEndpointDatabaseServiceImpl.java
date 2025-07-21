@@ -1,6 +1,6 @@
 package com.guilhermescherer.msservicewatch.service.database.impl;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +16,22 @@ public class ServiceEndpointDatabaseServiceImpl implements ServiceEndpointDataba
     private final ServiceEndpointRepository serviceEndpointRepository;
 
     @Override
-    public ServiceEndpoint save(ServiceEndpoint serviceEndpoint) {
+    public ServiceEndpointModel save(ServiceEndpointModel serviceEndpoint) {
         return serviceEndpointRepository.save(serviceEndpoint);
     }
 
     @Override
-    public Optional<ServiceEndpoint> getById(Long id) {
+    public Optional<ServiceEndpointModel> getById(Long id) {
         return serviceEndpointRepository.findById(id);
     }
 
     @Override
-    public List<ServiceEndpoint> getAll() {
+    public List<ServiceEndpointModel> getAll() {
         return serviceEndpointRepository.findAll();
     }
 
     @Override
-    public List<ServiceEndpoint> getNextEndpointsToCheck() {
+    public List<ServiceEndpointModel> getNextEndpointsToCheck() {
         return serviceEndpointRepository.findServiceEndpointsToVerify();
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @Table(name = "service_endpoint")
 @Entity
-public class ServiceEndpoint extends Model {
+public class ServiceEndpointModel extends Model {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -33,5 +33,5 @@ public class ServiceEndpoint extends Model {
     @Column(name = "last_status")
     private Status lastStatus;
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ServiceStatusLog> logs;
+    private List<ServiceStatusLogModel> logs;
 }

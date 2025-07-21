@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.converter.response;
 
 import com.guilhermescherer.msservicewatch.dto.response.ServiceStatusLogResponse;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ class ServiceLogStatusResponseConverterTest {
     @Test
     @DisplayName("Should convert ServiceStatusLog to ServiceStatusLogResponse correctly")
     void shouldConvertEntityToResponse() {
-        ServiceStatusLog source = new ServiceStatusLog();
+        ServiceStatusLogModel source = new ServiceStatusLogModel();
         source.setStatus(Status.UP);
         source.setResponseTimeMillis(250L);
         source.setCheckedAt(LocalDateTime.now());

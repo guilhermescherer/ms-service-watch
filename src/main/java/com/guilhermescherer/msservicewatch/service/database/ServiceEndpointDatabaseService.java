@@ -1,19 +1,19 @@
 package com.guilhermescherer.msservicewatch.service.database;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ServiceEndpointDatabaseService {
 
-    ServiceEndpoint save(ServiceEndpoint serviceEndpoint);
+    ServiceEndpointModel save(ServiceEndpointModel serviceEndpoint);
 
-    Optional<ServiceEndpoint> getById(Long id);
+    Optional<ServiceEndpointModel> getById(Long id);
 
-    List<ServiceEndpoint> getAll();
+    List<ServiceEndpointModel> getAll();
 
-    List<ServiceEndpoint> getNextEndpointsToCheck();
+    List<ServiceEndpointModel> getNextEndpointsToCheck();
 
     void delete(Long id);
 }

@@ -1,7 +1,7 @@
 package com.guilhermescherer.msservicewatch.service.database.impl;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.repository.ServiceStatusLogRepository;
@@ -51,14 +51,14 @@ class ServiceStatusLogDatabaseServiceImplTest {
     @Test
     @DisplayName("Should save ServiceStatusLog entity")
     void shouldSaveServiceStatusLog() {
-        ServiceEndpoint endpoint = new ServiceEndpoint();
+        ServiceEndpointModel endpoint = new ServiceEndpointModel();
         endpoint.setName("Test Service");
         endpoint.setUrl("http://localhost");
         endpoint.setActive(true);
         endpoint.setCheckInterval(60);
-        ServiceEndpoint savedEndpoint = serviceEndpointRepository.save(endpoint);
+        ServiceEndpointModel savedEndpoint = serviceEndpointRepository.save(endpoint);
 
-        ServiceStatusLog log = new ServiceStatusLog();
+        ServiceStatusLogModel log = new ServiceStatusLogModel();
         log.setService(savedEndpoint);
         log.setStatus(Status.UP);
         log.setResponseTimeMillis(100L);
@@ -73,15 +73,15 @@ class ServiceStatusLogDatabaseServiceImplTest {
     @Test
     @DisplayName("Should return paged logs by ServiceEndpoint")
     void shouldReturnPagedLogsByServiceEndpoint() {
-        ServiceEndpoint endpoint = new ServiceEndpoint();
+        ServiceEndpointModel endpoint = new ServiceEndpointModel();
         endpoint.setName("Test Service 2");
         endpoint.setUrl("http://localhost/2");
         endpoint.setActive(true);
         endpoint.setCheckInterval(60);
-        ServiceEndpoint savedEndpoint = serviceEndpointRepository.save(endpoint);
+        ServiceEndpointModel savedEndpoint = serviceEndpointRepository.save(endpoint);
 
         for (int i = 0; i < 3; i++) {
-            ServiceStatusLog log = new ServiceStatusLog();
+            ServiceStatusLogModel log = new ServiceStatusLogModel();
             log.setService(savedEndpoint);
             log.setStatus(Status.UP);
             log.setResponseTimeMillis(100L + i);
@@ -91,7 +91,7 @@ class ServiceStatusLogDatabaseServiceImplTest {
 
         Pageable pageable = PageRequest.of(0, 2);
 
-        Page<ServiceStatusLog> page = serviceStatusLogDatabaseService.getLogsByServiceEndpoint(savedEndpoint, pageable);
+        Page<ServiceStatusLogModel> page = serviceStatusLogDatabaseService.getLogsByServiceEndpoint(savedEndpoint, pageable);
 
         assertEquals(2, page.getContent().size());
         assertEquals(3, page.getTotalElements());

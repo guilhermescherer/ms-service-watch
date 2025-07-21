@@ -7,7 +7,7 @@ import com.guilhermescherer.msservicewatch.dto.request.ServiceEndpointRequest;
 import com.guilhermescherer.msservicewatch.dto.response.ServiceEndpointResponse;
 import com.guilhermescherer.msservicewatch.exception.NotFoundException;
 import com.guilhermescherer.msservicewatch.facade.ServiceEndpointFacade;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import com.guilhermescherer.msservicewatch.service.core.CheckServiceEndpointService;
 import com.guilhermescherer.msservicewatch.service.database.ServiceEndpointDatabaseService;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +29,14 @@ public class ServiceEndpointFacadeImpl implements ServiceEndpointFacade {
 
     @Override
     public ServiceEndpointResponse create(ServiceEndpointRequest request) {
-        ServiceEndpoint serviceEndpoint = serviceEndpointConverter.convert(request);
+        ServiceEndpointModel serviceEndpoint = serviceEndpointConverter.convert(request);
         serviceEndpoint = serviceEndpointDatabaseService.save(serviceEndpoint);
         return serviceEndpointResponseConverter.convert(serviceEndpoint);
     }
 
     @Override
     public ServiceEndpointResponse getById(Long id) {
-        ServiceEndpoint serviceEndpoint = serviceEndpointDatabaseService.getById(id)
+        ServiceEndpointModel serviceEndpoint = serviceEndpointDatabaseService.getById(id)
                 .orElseThrow(NotFoundException::new);
 
         return serviceEndpointResponseConverter.convert(serviceEndpoint);
@@ -44,7 +44,7 @@ public class ServiceEndpointFacadeImpl implements ServiceEndpointFacade {
 
     @Override
     public List<ServiceEndpointResponse> getAll() {
-        List<ServiceEndpoint> services = serviceEndpointDatabaseService.getAll();
+        List<ServiceEndpointModel> services = serviceEndpointDatabaseService.getAll();
 
         return Stream.ofNullable(services)
                 .flatMap(Collection::stream)
@@ -54,7 +54,7 @@ public class ServiceEndpointFacadeImpl implements ServiceEndpointFacade {
 
     @Override
     public ServiceEndpointResponse update(Long id, ServiceEndpointRequest request) {
-        ServiceEndpoint serviceEndpoint = serviceEndpointDatabaseService.getById(id)
+        ServiceEndpointModel serviceEndpoint = serviceEndpointDatabaseService.getById(id)
                 .orElseThrow(NotFoundException::new);
 
         serviceEndpoint = serviceEndpointUpdateConverter.convert(request, serviceEndpoint);

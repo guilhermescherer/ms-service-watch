@@ -1,6 +1,6 @@
 package com.guilhermescherer.msservicewatch.repository;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ServiceEndpointRepository extends JpaRepository<ServiceEndpoint, Long> {
+public interface ServiceEndpointRepository extends JpaRepository<ServiceEndpointModel, Long> {
 
     @Query(value = """
             SELECT * FROM service_endpoint
@@ -21,5 +21,5 @@ public interface ServiceEndpointRepository extends JpaRepository<ServiceEndpoint
             LIMIT 2
             FOR UPDATE SKIP LOCKED
             """, nativeQuery = true)
-    List<ServiceEndpoint> findServiceEndpointsToVerify();
+    List<ServiceEndpointModel> findServiceEndpointsToVerify();
 }

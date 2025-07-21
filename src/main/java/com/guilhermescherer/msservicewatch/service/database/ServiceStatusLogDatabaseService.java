@@ -1,13 +1,13 @@
 package com.guilhermescherer.msservicewatch.service.database;
 
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ServiceStatusLogDatabaseService {
 
-    void save(ServiceStatusLog serviceStatusLog);
+    void save(ServiceStatusLogModel serviceStatusLog);
 
-    Page<ServiceStatusLog> getLogsByServiceEndpoint(ServiceEndpoint serviceEndpoint, Pageable pageable);
+    Page<ServiceStatusLogModel> getLogsByServiceEndpoint(ServiceEndpointModel serviceEndpoint, Pageable pageable);
 }

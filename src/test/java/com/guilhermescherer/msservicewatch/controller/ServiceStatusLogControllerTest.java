@@ -1,8 +1,8 @@
 package com.guilhermescherer.msservicewatch.controller;
 
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
-import com.guilhermescherer.msservicewatch.model.ServiceEndpoint;
-import com.guilhermescherer.msservicewatch.model.ServiceStatusLog;
+import com.guilhermescherer.msservicewatch.model.ServiceEndpointModel;
+import com.guilhermescherer.msservicewatch.model.ServiceStatusLogModel;
 import com.guilhermescherer.msservicewatch.model.Status;
 import com.guilhermescherer.msservicewatch.repository.ServiceEndpointRepository;
 import com.guilhermescherer.msservicewatch.repository.ServiceStatusLogRepository;
@@ -114,7 +114,7 @@ class ServiceStatusLogControllerTest {
                     .extract()
                     .path("id");
 
-            ServiceStatusLog serviceStatusLog = createExempleOfServiceStatusLog((long) id);
+            ServiceStatusLogModel serviceStatusLog = createExempleOfServiceStatusLog((long) id);
 
             serviceStatusLogApiTestUtils.get(id)
                     .statusCode(HttpStatus.SC_SUCCESS)
@@ -134,10 +134,10 @@ class ServiceStatusLogControllerTest {
                     .body("status", equalTo(HttpStatus.SC_NOT_FOUND));
         }
 
-        private ServiceStatusLog createExempleOfServiceStatusLog(long serviceEndpointId) {
-            ServiceEndpoint serviceEndpoint = serviceEndpointRepository.findById(serviceEndpointId).orElseThrow();
+        private ServiceStatusLogModel createExempleOfServiceStatusLog(long serviceEndpointId) {
+            ServiceEndpointModel serviceEndpoint = serviceEndpointRepository.findById(serviceEndpointId).orElseThrow();
 
-            ServiceStatusLog serviceStatusLog = new ServiceStatusLog();
+            ServiceStatusLogModel serviceStatusLog = new ServiceStatusLogModel();
 
             serviceStatusLog.setCheckedAt(LocalDateTime.now());
             serviceStatusLog.setStatus(Status.UP);
