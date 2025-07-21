@@ -37,3 +37,8 @@ jobs:
 
       - name: Build and Test
         run: mvn -B clean verify
+
+      - name: Analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=guilhermescherer_ms-service-watch
