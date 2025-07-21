@@ -37,11 +37,3 @@ jobs:
 
       - name: Build and Test
         run: mvn -B clean verify
-
-      - name: Sonar Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn -B sonar:sonar \
-            -Dsonar.projectKey=guilhermescherer_ms-service-watch \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
