@@ -38,7 +38,13 @@ jobs:
       - name: Build and Test
         run: mvn -B clean verify
 
-      - name: Analyze
+      - name: Sonar Analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=guilhermescherer_ms-service-watch
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ms-service-watch
+          path: target/*.jar
