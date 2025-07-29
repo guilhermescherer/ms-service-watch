@@ -1,0 +1,49 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - release
+
+jobs:
+  build-and-publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: ./mvnw clean package -DskipTests
+
+      - name: Setup Docker Build
+        uses: docker/setup-buildx-action@v2.0.0
+
+      - name: Docker Login
+        uses: docker/login-action@v2.0.0
+        with:
+          username: guilhermescherer
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build and Publish
+        uses: docker/build-push-action@v3.0.0
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: guilhermescherer/ms-service-watch:${{ github.ref_name }}
