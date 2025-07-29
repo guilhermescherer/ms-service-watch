@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: guilhermescherer/ms-service-watch:${{ github.ref_name }}
+          tags: guilhermescherer/ms-service-watch:${{ github.head_ref }}
