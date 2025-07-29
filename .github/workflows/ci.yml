@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -39,9 +39,9 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and Test
-        run: mvn -B clean verify
+        run: ./mvnw -B clean verify
 
-      - name: Analyze
+      - name: Sonar Analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=guilhermescherer_ms-service-watch
+        run: ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=guilhermescherer_ms-service-watch
