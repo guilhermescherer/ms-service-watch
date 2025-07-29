@@ -7,6 +7,7 @@ on:
 
 jobs:
   docker:
+    name: Docker Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,3 +21,11 @@ jobs:
         with:
           username: guilhermescherer
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v3.0.0
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: guilhermescherer/ms-service-watch:${{ github.ref_name }}
