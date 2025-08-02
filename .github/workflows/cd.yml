@@ -94,7 +94,7 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "target/*.jar"
-          target: "/home/${{ secrets.REMOTE_USER }}/app"
+          target: "/home/${{ secrets.REMOTE_USER }}/app/"
 
       - name: Run app on EC2 via SSH
         uses: appleboy/ssh-action@v1
@@ -109,7 +109,7 @@ jobs:
             export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
             export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
             
-            cd /home/${{ secrets.REMOTE_USER }}/app
+            cd /home/${{ secrets.REMOTE_USER }}/app/target
             
             chmod +x *.jar
 
