@@ -113,8 +113,4 @@ jobs:
             
             chmod +x *.jar
 
-            pkill -f 'java.*.jar' || true
-
-            nohup java -jar *.jar > nohup.out 2> nohup.err &
-            
-            
+            nohup java -jar *.jar > nohup.out 2> nohup.err < /dev/null &
