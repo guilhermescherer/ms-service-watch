@@ -85,7 +85,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app.jar
-          path: target
+          path: .
 
       - name: Copy JAR to EC2
         uses: appleboy/scp-action@v1
@@ -93,7 +93,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "target/*.jar"
+          source: "*.jar"
           target: "/home/${{ secrets.REMOTE_USER }}/app/"
 
       - name: Run app on EC2 via SSH
