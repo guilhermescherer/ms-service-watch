@@ -115,6 +115,6 @@ jobs:
 
             pkill -f 'java.*.jar' || true
 
-            nohup java -jar *.jar &
+            nohup java -jar *.jar > nohup.out 2> nohup.err &
             
             
