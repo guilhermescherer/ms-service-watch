@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  build-and-publish:
-    name: Build and Publish
+  build:
+    name: Build Project
     runs-on: ubuntu-latest
 
     steps:
@@ -34,6 +34,27 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app.jar
+          path: target/*.jar
+
+  publish:
+    name: Publish Docker Image
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app.jar
+          path: target
+
       - name: Setup Docker Build
         uses: docker/setup-buildx-action@v2.0.0
 
@@ -50,3 +71,46 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: guilhermescherer/ms-service-watch:${{ github.ref_name }}
+
+  deploy:
+    name: Deploy EC2
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app.jar
+          path: .
+
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "*.jar"
+          target: "/home/${{ secrets.REMOTE_USER }}/app/"
+
+      - name: Run app on EC2 via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            export DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+            export DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+            export DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+            export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
+            export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            
+            cd /home/${{ secrets.REMOTE_USER }}/app
+            
+            chmod +x *.jar
+
+            nohup java -jar *.jar > nohup.out 2> nohup.err < /dev/null &
