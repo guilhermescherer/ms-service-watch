@@ -103,7 +103,7 @@ jobs:
             DATABASE_PASSWORD=${{ secrets.RDS_DATABASE_PASSWORD }}
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: service_ms-service-watch
