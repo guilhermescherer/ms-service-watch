@@ -19,4 +19,4 @@ spring:
       enabled: true
 
 scheduler:
-  delay: 2000
+  delay: 60000
