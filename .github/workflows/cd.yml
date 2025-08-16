@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - release
 
 permissions:
   contents: read
@@ -40,8 +39,46 @@ jobs:
           name: app.jar
           path: target/*.jar
 
-  publish:
-    name: Publish Docker Image
+  publish-ecr:
+    name: Publish to ECR
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app.jar
+          path: target
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+  publish-docker-hub:
+    name: Publish to Docker Hub
     runs-on: ubuntu-latest
     needs: build
 
@@ -72,40 +109,40 @@ jobs:
           push: true
           tags: guilhermescherer/ms-service-watch:${{ github.ref_name }}
 
-  deploy:
-    name: Deploy ECS
-    needs: publish
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
-      - name: Getting task file
-        run: aws ecs describe-task-definition --task-definition task_ms-service-watch --query taskDefinition > task-definition.json
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: service-watch
-          image: guilhermescherer/ms-service-watch:${{ github.ref_name }}
-          environment-variables: |
-            DATABASE_HOST=${{ secrets.RDS_DATABASE_HOST }}
-            DATABASE_PORT=${{ secrets.RDS_DATABASE_PORT }}
-            DATABASE_NAME=${{ secrets.RDS_DATABASE_NAME }}
-            DATABASE_USERNAME=${{ secrets.RDS_DATABASE_USERNAME }}
-            DATABASE_PASSWORD=${{ secrets.RDS_DATABASE_PASSWORD }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: service_ms-service-watch
-          cluster: service-watch
-          wait-for-service-stability: true
+#  deploy:
+#    name: Deploy ECS
+#    needs: publish-ecr
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: us-east-2
+#
+#      - name: Getting task file
+#        run: aws ecs describe-task-definition --task-definition task_ms-service-watch --query taskDefinition > task-definition.json
+#
+#      - name: Fill in the new image ID in the Amazon ECS task definition
+#        id: task-def
+#        uses: aws-actions/amazon-ecs-render-task-definition@v1
+#        with:
+#          task-definition: task-definition.json
+#          container-name: service-watch
+#          image: guilhermescherer/ms-service-watch:${{ github.ref_name }}
+#          environment-variables: |
+#            DATABASE_HOST=${{ secrets.RDS_DATABASE_HOST }}
+#            DATABASE_PORT=${{ secrets.RDS_DATABASE_PORT }}
+#            DATABASE_NAME=${{ secrets.RDS_DATABASE_NAME }}
+#            DATABASE_USERNAME=${{ secrets.RDS_DATABASE_USERNAME }}
+#            DATABASE_PASSWORD=${{ secrets.RDS_DATABASE_PASSWORD }}
+#
+#      - name: Deploy Amazon ECS task definition
+#        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+#        with:
+#          task-definition: ${{ steps.task-def.outputs.task-definition }}
+#          service: service_ms-service-watch
+#          cluster: service-watch
+#          wait-for-service-stability: true
