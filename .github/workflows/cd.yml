@@ -43,6 +43,8 @@ jobs:
     name: Publish to ECR
     runs-on: ubuntu-latest
     needs: build
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
 
     steps:
       - name: Checkout repository
@@ -110,40 +112,34 @@ jobs:
           push: true
           tags: guilhermescherer/ms-service-watch:${{ github.ref_name }}
 
-#  deploy:
-#    name: Deploy ECS
-#    needs: publish-ecr
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: us-east-2
-#
-#      - name: Getting task file
-#        run: aws ecs describe-task-definition --task-definition task_ms-service-watch --query taskDefinition > task-definition.json
-#
-#      - name: Fill in the new image ID in the Amazon ECS task definition
-#        id: task-def
-#        uses: aws-actions/amazon-ecs-render-task-definition@v1
-#        with:
-#          task-definition: task-definition.json
-#          container-name: service-watch
-#          image: guilhermescherer/ms-service-watch:${{ github.ref_name }}
-#          environment-variables: |
-#            DATABASE_HOST=${{ secrets.RDS_DATABASE_HOST }}
-#            DATABASE_PORT=${{ secrets.RDS_DATABASE_PORT }}
-#            DATABASE_NAME=${{ secrets.RDS_DATABASE_NAME }}
-#            DATABASE_USERNAME=${{ secrets.RDS_DATABASE_USERNAME }}
-#            DATABASE_PASSWORD=${{ secrets.RDS_DATABASE_PASSWORD }}
-#
-#      - name: Deploy Amazon ECS task definition
-#        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-#        with:
-#          task-definition: ${{ steps.task-def.outputs.task-definition }}
-#          service: service_ms-service-watch
-#          cluster: service-watch
-#          wait-for-service-stability: true
+  deploy:
+    name: Deploy ECS
+    needs: publish-ecr
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Getting task definition
+        run: aws ecs describe-task-definition --task-definition ms-service-watch_task-definition --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.8.0
+        with:
+          task-definition: task-definition.json
+          container-name: service-watch
+          image: ${{ needs.publish-ecr.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ms-service-watch-service
+          cluster: dev-cluster
+          wait-for-service-stability: true
