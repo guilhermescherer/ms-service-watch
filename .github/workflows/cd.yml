@@ -128,6 +128,9 @@ jobs:
       - name: Getting task definition
         run: aws ecs describe-task-definition --task-definition ms-service-watch_task-definition --query taskDefinition > task-definition.json
 
+      - name: Copy from task definition
+        run: cp task-definition.json task-definition.json.bkp
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1.8.0
