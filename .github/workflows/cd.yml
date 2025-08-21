@@ -146,3 +146,7 @@ jobs:
           service: ms-service-watch-service
           cluster: dev-cluster
           wait-for-service-stability: true
+
+      - name: Application health check
+        continue-on-error: true
+        run: sleep 30s ; wget 3.137.216.175:8080
