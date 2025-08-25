@@ -148,5 +148,17 @@ jobs:
           wait-for-service-stability: true
 
       - name: Application health check
+        id: healthcheck
         continue-on-error: true
-        run: sleep 30s ; wget 3.137.216.175:8080
+        run: |
+          sleep 30s 
+          curl -f lb-service-watch-872304953.us-east-2.elb.amazonaws.com
+
+      - name: Deploy Amazon ECS task definition
+        if: ${{ steps.healthcheck.outcome == 'failure' }}
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: task-definition.json.bkp
+          service: ms-service-watch-service
+          cluster: dev-cluster
+          wait-for-service-stability: true
