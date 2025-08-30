@@ -115,50 +115,6 @@ jobs:
   deploy:
     name: Deploy ECS
     needs: publish-ecr
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
-      - name: Getting task definition
-        run: aws ecs describe-task-definition --task-definition ms-service-watch_task-definition --query taskDefinition > task-definition.json
-
-      - name: Copy from task definition
-        run: cp task-definition.json task-definition.json.bkp
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1.8.0
-        with:
-          task-definition: task-definition.json
-          container-name: service-watch
-          image: ${{ needs.publish-ecr.outputs.image }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ms-service-watch-service
-          cluster: dev-cluster
-          wait-for-service-stability: true
-
-      - name: Application health check
-        id: healthcheck
-        continue-on-error: true
-        run: |
-          sleep 30s 
-          curl -f lb-service-watch-872304953.us-east-2.elb.amazonaws.com
-
-      - name: Deploy Amazon ECS task definition
-        if: ${{ steps.healthcheck.outcome == 'failure' }}
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: task-definition.json.bkp
-          service: ms-service-watch-service
-          cluster: dev-cluster
-          wait-for-service-stability: true
+    uses: ./.github/workflows/ecs.yml
+    with:
+      image: ${{ needs.publish-ecr.outputs.image }}
